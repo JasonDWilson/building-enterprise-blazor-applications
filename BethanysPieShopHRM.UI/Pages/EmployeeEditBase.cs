@@ -1,34 +1,16 @@
-﻿using System;
+﻿using BethanysPieShopHRM.Shared;
+using BethanysPieShopHRM.UI.Services;
+using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Forms;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using BethanysPieShopHRM.UI.Services;
-using BethanysPieShopHRM.Shared;
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Forms;
 
 namespace BethanysPieShopHRM.UI.Pages
 {
     public class EmployeeEditBase : ComponentBase
     {
-        [Inject]
-        public IEmployeeDataService EmployeeDataService { get; set; }
-
-        [Inject]
-        public ICountryDataService CountryDataService { get; set; }
-
-        [Inject]
-        public IJobCategoryDataService JobCategoryDataService { get; set; }
-
-        [Inject] 
-        public NavigationManager NavigationManager { get; set; }
-
-        [Parameter]
-        public string EmployeeId { get; set; }
-
-        public InputText LastNameInputText { get; set; }
-
-        public Employee Employee { get; set; } = new Employee();
 
         //needed to bind to select to value
         protected string CountryId = string.Empty;
@@ -36,32 +18,44 @@ namespace BethanysPieShopHRM.UI.Pages
 
         //used to store state of screen
         protected string Message = string.Empty;
-        protected string StatusClass = string.Empty;
         protected bool Saved;
+        protected string StatusClass = string.Empty;
 
         public List<Country> Countries { get; set; } = new List<Country>();
+
+        [Inject]
+        public ICountryDataService CountryDataService { get; set; }
+
+        public Employee Employee { get; set; } = new Employee();
+        [Inject]
+        public IEmployeeDataService EmployeeDataService { get; set; }
+
+        [Parameter]
+        public string EmployeeId { get; set; }
         public List<JobCategory> JobCategories { get; set; } = new List<JobCategory>();
 
-        protected override async Task OnInitializedAsync()
+        [Inject]
+        public IJobCategoryDataService JobCategoryDataService { get; set; }
+
+        public InputText LastNameInputText { get; set; }
+
+        [Inject]
+        public NavigationManager NavigationManager { get; set; }
+
+        protected async Task DeleteEmployee()
         {
-            Saved = false;
-            Countries = (await CountryDataService.GetAllCountries()).ToList();
-            JobCategories = (await JobCategoryDataService.GetAllJobCategories()).ToList();
+            await EmployeeDataService.DeleteEmployee(Employee.EmployeeId);
 
-            int.TryParse(EmployeeId, out var employeeId);
+            StatusClass = "alert-success";
+            Message = "Deleted successfully";
 
-            if (employeeId == 0) //new employee is being created
-            {
-                //add some defaults
-                Employee = new Employee { CountryId = 1, JobCategoryId = 1, BirthDate = DateTime.Now, JoinedDate = DateTime.Now };
-            }
-            else
-            {
-                Employee = await EmployeeDataService.GetEmployeeDetails(int.Parse(EmployeeId));
-            }
+            Saved = true;
+        }
 
-            CountryId = Employee.CountryId.ToString();
-            JobCategoryId = Employee.JobCategoryId.ToString();
+        protected void HandleInvalidSubmit()
+        {
+            StatusClass = "alert-danger";
+            Message = "There are some validation errors. Please try again.";
         }
 
         protected async Task HandleValidSubmit()
@@ -94,25 +88,31 @@ namespace BethanysPieShopHRM.UI.Pages
             }
         }
 
-        protected void HandleInvalidSubmit()
-        {
-            StatusClass = "alert-danger";
-            Message = "There are some validation errors. Please try again.";
-        }
-
-        protected async Task DeleteEmployee()
-        {
-            await EmployeeDataService.DeleteEmployee(Employee.EmployeeId);
-
-            StatusClass = "alert-success";
-            Message = "Deleted successfully";
-
-            Saved = true;
-        }
-
         protected void NavigateToOverview()
         {
             NavigationManager.NavigateTo("/employeeoverview");
+        }
+
+        protected override async Task OnInitializedAsync()
+        {
+            Saved = false;
+            Countries = (await CountryDataService.GetAllCountries()).ToList();
+            JobCategories = (await JobCategoryDataService.GetAllJobCategories()).ToList();
+
+            int.TryParse(EmployeeId, out var employeeId);
+
+            if (employeeId == 0) //new employee is being created
+            {
+                //add some defaults
+                Employee = new Employee { CountryId = 1, JobCategoryId = 1, BirthDate = DateTime.Now, JoinedDate = DateTime.Now };
+            }
+            else
+            {
+                Employee = await EmployeeDataService.GetEmployeeDetailsAsync(int.Parse(EmployeeId));
+            }
+
+            CountryId = Employee.CountryId.ToString();
+            JobCategoryId = Employee.JobCategoryId.ToString();
         }
     }
 }

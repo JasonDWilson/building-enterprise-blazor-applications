@@ -1,26 +1,16 @@
-﻿using System;
+﻿using BethanysPieShopHRM.Shared;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using BethanysPieShopHRM.Shared;
 
 namespace BethanysPieShopHRM.UI.Services
 {
     public class MockEmployeeDataService : IEmployeeDataService
     {
-        private List<Employee> _employees;
         private List<Country> _countries;
+        private List<Employee> _employees;
         private List<JobCategory> _jobCategories;
-
-        private IEnumerable<Employee> Employees
-        {
-            get
-            {
-                if (_employees == null)
-                    InitializeEmployees();
-                return _employees;
-            }
-        }
 
         private List<Country> Countries
         {
@@ -32,6 +22,16 @@ namespace BethanysPieShopHRM.UI.Services
             }
         }
 
+        private IEnumerable<Employee> Employees
+        {
+            get
+            {
+                if (_employees == null)
+                    InitializeEmployees();
+                return _employees;
+            }
+        }
+
         private List<JobCategory> JobCategories
         {
             get
@@ -40,24 +40,6 @@ namespace BethanysPieShopHRM.UI.Services
                     InitializeJobCategories();
                 return _jobCategories;
             }
-        }
-
-        private void InitializeJobCategories()
-        {
-            _jobCategories = new List<JobCategory>()
-            {
-                new JobCategory{JobCategoryId = 1, JobCategoryName = "Pie research"},
-                new JobCategory{JobCategoryId = 2, JobCategoryName = "Sales"},
-                new JobCategory{JobCategoryId = 3, JobCategoryName = "Management"},
-                new JobCategory{JobCategoryId = 4, JobCategoryName = "Store staff"},
-                new JobCategory{JobCategoryId = 5, JobCategoryName = "Finance"},
-                new JobCategory{JobCategoryId = 6, JobCategoryName = "QA"},
-                new JobCategory{JobCategoryId = 7, JobCategoryName = "IT"},
-                new JobCategory{JobCategoryId = 8, JobCategoryName = "Cleaning"},
-                new JobCategory{JobCategoryId = 9, JobCategoryName = "Bakery"},
-                new JobCategory{JobCategoryId = 9, JobCategoryName = "Bakery"}
-
-            };
         }
 
         private void InitializeCountries()
@@ -94,7 +76,7 @@ namespace BethanysPieShopHRM.UI.Services
                     Smoker = false,
                     Street = "Grote Markt 1",
                     Zip = "1000",
-                    JobCategoryId = 1, 
+                    JobCategoryId = 1,
                     Comment = "Lorem Ipsum",
                     ExitDate = null,
                     JoinedDate = new DateTime(2015, 3, 1)
@@ -103,24 +85,22 @@ namespace BethanysPieShopHRM.UI.Services
             }
         }
 
-        public async Task<IEnumerable<Employee>> GetAllEmployees()
+        private void InitializeJobCategories()
         {
-            return await Task.Run(() => Employees);
-        }
+            _jobCategories = new List<JobCategory>()
+            {
+                new JobCategory{JobCategoryId = 1, JobCategoryName = "Pie research"},
+                new JobCategory{JobCategoryId = 2, JobCategoryName = "Sales"},
+                new JobCategory{JobCategoryId = 3, JobCategoryName = "Management"},
+                new JobCategory{JobCategoryId = 4, JobCategoryName = "Store staff"},
+                new JobCategory{JobCategoryId = 5, JobCategoryName = "Finance"},
+                new JobCategory{JobCategoryId = 6, JobCategoryName = "QA"},
+                new JobCategory{JobCategoryId = 7, JobCategoryName = "IT"},
+                new JobCategory{JobCategoryId = 8, JobCategoryName = "Cleaning"},
+                new JobCategory{JobCategoryId = 9, JobCategoryName = "Bakery"},
+                new JobCategory{JobCategoryId = 9, JobCategoryName = "Bakery"}
 
-        public async Task<List<Country>> GetAllCountries()
-        {
-            return await Task.Run(() => Countries);
-        }
-
-        public async Task<List<JobCategory>> GetAllJobCategories()
-        {
-            return await Task.Run(() => JobCategories);
-        }
-
-        public async Task<Employee> GetEmployeeDetails(int employeeId)
-        {
-            return await Task.Run(() => { return Employees.FirstOrDefault(e => e.EmployeeId == employeeId); });
+            };
         }
 
         public Task<Employee> AddEmployee(Employee employee)
@@ -131,6 +111,26 @@ namespace BethanysPieShopHRM.UI.Services
         public Task DeleteEmployee(int employeeId)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<List<Country>> GetAllCountries()
+        {
+            return await Task.Run(() => Countries);
+        }
+
+        public async Task<IEnumerable<Employee>> GetAllEmployees()
+        {
+            return await Task.Run(() => Employees);
+        }
+
+        public async Task<List<JobCategory>> GetAllJobCategories()
+        {
+            return await Task.Run(() => JobCategories);
+        }
+
+        public async Task<Employee> GetEmployeeDetailsAsync(int employeeId)
+        {
+            return await Task.Run(() => { return Employees.FirstOrDefault(e => e.EmployeeId == employeeId); });
         }
 
         public Task UpdateEmployee(Employee employee)

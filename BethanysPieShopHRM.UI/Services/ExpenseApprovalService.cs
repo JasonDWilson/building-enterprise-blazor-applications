@@ -1,13 +1,21 @@
 ﻿using BethanysPieShopHRM.Shared;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace BethanysPieShopHRM.UI.Services
 {
     public class ExpenseApprovalService : IExpenseApprovalService
     {
-        public ExpenseStatus GetExpenseStatus(Expense expense, Employee employee)
+        private readonly IEmployeeDataService _employeeDataService;
+
+        public ExpenseApprovalService(IEmployeeDataService employeeDataService) =>
+            _employeeDataService = employeeDataService ?? throw new ArgumentNullException(nameof(employeeDataService));
+
+        public async Task<ExpenseStatus> GetExpenseStatusAsync(Expense expense)
         {
+            var employee = await _employeeDataService.GetEmployeeDetailsAsync(expense.EmployeeId);
+
             ExpenseStatus status = ExpenseStatus.Pending;
 
             if (employee.IsOPEX)

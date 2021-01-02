@@ -1,32 +1,32 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using BethanysPieShopHRM.ComponentsLibrary.Map;
-using BethanysPieShopHRM.UI.Services;
+﻿using BethanysPieShopHRM.ComponentsLibrary.Map;
 using BethanysPieShopHRM.Shared;
+using BethanysPieShopHRM.UI.Services;
 using Microsoft.AspNetCore.Components;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace BethanysPieShopHRM.UI.Pages
 {
     public class EmployeeDetailBase : ComponentBase
     {
+
+        protected string JobCategory = string.Empty;
+
+        public Employee Employee { get; set; } = new Employee();
         [Inject]
         public IEmployeeDataService EmployeeDataService { get; set; }
-
-        [Inject]
-        public IJobCategoryDataService JobCategoryDataService{ get; set; }
 
         [Parameter]
         public string EmployeeId { get; set; }
 
-        public List<Marker> MapMarkers { get; set; } = new List<Marker>();
+        [Inject]
+        public IJobCategoryDataService JobCategoryDataService { get; set; }
 
-        protected string JobCategory = string.Empty;
-       
-        public Employee Employee { get; set; } = new Employee();
+        public List<Marker> MapMarkers { get; set; } = new List<Marker>();
 
         protected override async Task OnInitializedAsync()
         {
-            Employee = await EmployeeDataService.GetEmployeeDetails(int.Parse(EmployeeId));
+            Employee = await EmployeeDataService.GetEmployeeDetailsAsync(int.Parse(EmployeeId));
 
             MapMarkers = new List<Marker>
             {

@@ -1,6 +1,7 @@
 ﻿using BethanysPieShopHRM.Shared;
 using BethanysPieShopHRM.UI.Services;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,9 @@ namespace BethanysPieShopHRM.UI.Pages
         public int Count { get; set; }
 
         [Inject]
+        public ILogger<TaskList> Logger { get; set; }
+
+        [Inject]
         public NavigationManager navManager { get; set; }
 
         public List<HRTask> Tasks { get; set; } = new List<HRTask>();
@@ -23,7 +27,16 @@ namespace BethanysPieShopHRM.UI.Pages
 
         protected override async Task OnInitializedAsync()
         {
-            var tasks = (await taskService.GetAllTasks()).ToList();
+            List<HRTask> tasks = new List<HRTask>();
+            try
+            {
+                tasks = (await taskService.GetAllTasks()).ToList();
+            }
+            catch (Exception ex)
+            {
+                Logger.LogDebug(ex, "Error getting tasks");
+            }
+
             if (Count != 0)
                 tasks = tasks.Take(Count).ToList();
             Tasks = tasks;

@@ -41,10 +41,8 @@ namespace BethanysPieShopHRM.UI.Pages
             Expense.EmployeeId = int.Parse(EmployeeId);
             Expense.CurrencyId = int.Parse(CurrencyId);
 
-            var employee = await EmployeeDataService.GetEmployeeDetails(Expense.EmployeeId);
-
             Expense.Amount *= Currencies.FirstOrDefault(x => x.CurrencyId == Expense.CurrencyId).USExchange;
-            Expense.Status = ExpenseApprovalService.GetExpenseStatus(Expense, employee);
+            Expense.Status = await ExpenseApprovalService.GetExpenseStatusAsync(Expense);
 
             if (Expense.ExpenseId == 0) // New 
             {
