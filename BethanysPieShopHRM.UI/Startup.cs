@@ -55,24 +55,29 @@ namespace BethanysPieShopHRM.UI
                         options.DetailedErrors = true;
                     });
 
-            services.AddScoped<HttpClient>(
-                s =>
-                {
-                    var client = new HttpClient { BaseAddress = new Uri("https://localhost:44340/") };
-                    return client;
-                });
-
             services.AddProtectedBrowserStorage();
 
-            //services.AddScoped<IEmployeeDataService, MockEmployeeDataService>();
-            services.AddScoped<IEmployeeDataService, EmployeeDataService>();
-            services.AddScoped<ICountryDataService, CountryDataService>();
-            services.AddScoped<IJobCategoryDataService, JobCategoryDataService>();
+            // Helper Registrations
             services.AddScoped<IExpenseApprovalService, ManagerApprovalService>();
-            services.AddScoped<IExpenseDataService, ExpenseDataService>();
-            services.AddScoped<ITaskDataService, TaskDataService>();
             services.AddScoped<IEmailService, EmailService>();
-            services.AddScoped<ISurveyDataService, SurveyDataService>();
+
+            // Http Services
+            var pieShopUri = new Uri("https://localhost:44340/");
+            var recruitingUri = new Uri("https://localhost:5001/");
+            void RegisterTypedClient<TClient, TImplementation>(Uri apiBaseUrl)
+                where TClient : class
+                where TImplementation : class, TClient
+            => services.AddHttpClient<TClient, TImplementation>(client => client.BaseAddress = apiBaseUrl);
+            RegisterTypedClient<IEmployeeDataService, EmployeeDataService>(pieShopUri);
+            RegisterTypedClient<ICountryDataService, CountryDataService>(pieShopUri);
+            RegisterTypedClient<IJobCategoryDataService, JobCategoryDataService>(pieShopUri);
+            RegisterTypedClient<ITaskDataService, TaskDataService>(pieShopUri);
+            RegisterTypedClient<ISurveyDataService, SurveyDataService>(pieShopUri);
+            //RegisterTypedClient<ICurrencyDataService, CurrencyDataService>(pieShopUri);
+            RegisterTypedClient<IExpenseDataService, ExpenseDataService>(pieShopUri);
+            RegisterTypedClient<IJobDataService, JobsDataService>(recruitingUri);
+
+
         }
     }
 }

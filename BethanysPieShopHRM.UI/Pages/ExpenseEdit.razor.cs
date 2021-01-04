@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace BethanysPieShopHRM.UI.Pages
 {
-    public class ExpenseEditBase : ComponentBase
+    public partial class ExpenseEdit
     {
 
         //needed to bind to select value
