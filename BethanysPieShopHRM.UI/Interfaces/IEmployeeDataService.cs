@@ -1,15 +1,17 @@
-﻿using System.Collections.Generic;
+﻿using BethanysPieShopHRM.Shared;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using BethanysPieShopHRM.Shared;
 
 namespace BethanysPieShopHRM.UI.Services
 {
     public interface IEmployeeDataService
     {
-        Task<IEnumerable<Employee>> GetAllEmployees();
-        Task<Employee> GetEmployeeDetails(int employeeId);
+        Employee SavedEmployee { get; set; }
+
         Task<Employee> AddEmployee(Employee employee);
-        Task UpdateEmployee(Employee employee);
         Task DeleteEmployee(int employeeId);
+        Task<IEnumerable<Employee>> GetAllEmployees();
+        Task<Employee> GetEmployeeDetailsAsync(int employeeId);
+        Task UpdateEmployee(Employee employee);
     }
 }
