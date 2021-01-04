@@ -62,6 +62,8 @@ namespace BethanysPieShopHRM.UI
                     return client;
                 });
 
+            services.AddProtectedBrowserStorage();
+
             //services.AddScoped<IEmployeeDataService, MockEmployeeDataService>();
             services.AddScoped<IEmployeeDataService, EmployeeDataService>();
             services.AddScoped<ICountryDataService, CountryDataService>();
