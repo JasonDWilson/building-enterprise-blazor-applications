@@ -7,9 +7,8 @@ using System.Threading.Tasks;
 
 namespace BethanysPieShopHRM.UI.Pages
 {
-    public class EmployeeDetailBase : ComponentBase
+    public partial class EmployeeDetail
     {
-
         protected string JobCategory = string.Empty;
 
         public Employee Employee { get; set; } = new Employee();
@@ -17,7 +16,7 @@ namespace BethanysPieShopHRM.UI.Pages
         public IEmployeeDataService EmployeeDataService { get; set; }
 
         [Parameter]
-        public string EmployeeId { get; set; }
+        public int EmployeeId { get; set; }
 
         [Inject]
         public IJobCategoryDataService JobCategoryDataService { get; set; }
@@ -26,11 +25,17 @@ namespace BethanysPieShopHRM.UI.Pages
 
         protected override async Task OnInitializedAsync()
         {
-            Employee = await EmployeeDataService.GetEmployeeDetailsAsync(int.Parse(EmployeeId));
+            Employee = await EmployeeDataService.GetEmployeeDetailsAsync(EmployeeId);
 
             MapMarkers = new List<Marker>
             {
-                new Marker{Description = $"{Employee.FirstName} {Employee.LastName}",  ShowPopup = false, X = Employee.Longitude, Y = Employee.Latitude}
+                new Marker
+                {
+                    Description = $"{Employee.FirstName} {Employee.LastName}",
+                    ShowPopup = false,
+                    X = Employee.Longitude,
+                    Y = Employee.Latitude
+                }
             };
             JobCategory = (await JobCategoryDataService.GetJobCategoryById(Employee.JobCategoryId)).JobCategoryName;
         }

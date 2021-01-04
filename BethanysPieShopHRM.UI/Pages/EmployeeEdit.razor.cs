@@ -2,6 +2,7 @@
 using BethanysPieShopHRM.UI.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.AspNetCore.ProtectedBrowserStorage;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,6 @@ namespace BethanysPieShopHRM.UI.Pages
 {
     public partial class EmployeeEdit
     {
-
         //needed to bind to select to value
         protected string CountryId = string.Empty;
         protected string JobCategoryId = string.Empty;
@@ -32,12 +32,16 @@ namespace BethanysPieShopHRM.UI.Pages
 
         [Parameter]
         public string EmployeeId { get; set; }
+
         public List<JobCategory> JobCategories { get; set; } = new List<JobCategory>();
 
         [Inject]
         public IJobCategoryDataService JobCategoryDataService { get; set; }
 
         public InputText LastNameInputText { get; set; }
+
+        [Inject]
+        public ProtectedLocalStorage LocalStorageService { get; set; }
 
         [Inject]
         public NavigationManager NavigationManager { get; set; }
@@ -88,10 +92,7 @@ namespace BethanysPieShopHRM.UI.Pages
             }
         }
 
-        protected void NavigateToOverview()
-        {
-            NavigationManager.NavigateTo("/employeeoverview");
-        }
+        protected void NavigateToOverview() { NavigationManager.NavigateTo("/employeeoverview"); }
 
         protected override async Task OnInitializedAsync()
         {
@@ -101,14 +102,22 @@ namespace BethanysPieShopHRM.UI.Pages
 
             int.TryParse(EmployeeId, out var employeeId);
 
-            if(EmployeeDataService.SavedEmployee != null)
+            var savedEmployee = await LocalStorageService.GetAsync<Employee>("Employee");
+
+            if (savedEmployee != null && employeeId == 0)
             {
-                Employee = EmployeeDataService.SavedEmployee;
+                Employee = savedEmployee;
             }
             else if (employeeId == 0) //new employee is being created
             {
                 //add some defaults
-                Employee = new Employee { CountryId = 1, JobCategoryId = 1, BirthDate = DateTime.Now, JoinedDate = DateTime.Now };
+                Employee = new Employee
+                {
+                    CountryId = 1,
+                    JobCategoryId = 1,
+                    BirthDate = DateTime.Now,
+                    JoinedDate = DateTime.Now
+                };
             }
             else
             {
@@ -119,9 +128,9 @@ namespace BethanysPieShopHRM.UI.Pages
             JobCategoryId = Employee.JobCategoryId.ToString();
         }
 
-        protected void TempSave()
+        public async Task TempSave()
         {
-            EmployeeDataService.SavedEmployee = Employee;
+            await LocalStorageService.SetAsync("Employee", Employee);
             NavigateToOverview();
         }
     }
