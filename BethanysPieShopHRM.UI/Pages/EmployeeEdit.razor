@@ -1,7 +1,7 @@
 ﻿@page "/employeeedit"
 @page "/employeeedit/{EmployeeId}"
 @using BethanysPieShopHRM.Shared
-@inherits EmployeeEditBase
+
 
 <section class="employee-edit">
     @if (!Saved)
@@ -144,7 +144,7 @@
                 </a>
             }
 
-            <a class="btn btn-outline-secondary edit-outline-btn float-right" onclick="@TempSave">Temp Save</a> 
+            <a class="btn btn-outline-secondary edit-outline-btn float-right" onclick="TempSave">Temp Save</a> 
         </EditForm>
 
     }

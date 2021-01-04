@@ -101,7 +101,7 @@ namespace BethanysPieShopHRM.UI.Pages
 
             int.TryParse(EmployeeId, out var employeeId);
 
-            if(EmployeeDataService.SavedEmployee != null)
+            if (EmployeeDataService.SavedEmployee != null)
             {
                 Employee = EmployeeDataService.SavedEmployee;
             }
@@ -119,7 +119,7 @@ namespace BethanysPieShopHRM.UI.Pages
             JobCategoryId = Employee.JobCategoryId.ToString();
         }
 
-        protected void TempSave()
+        public void TempSave()
         {
             EmployeeDataService.SavedEmployee = Employee;
             NavigateToOverview();

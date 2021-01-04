@@ -42,18 +42,20 @@ namespace BethanysPieShopHRM.UI.Services
             }
         }
 
+        public Employee SavedEmployee { get; set; }
+
         private void InitializeCountries()
         {
             _countries = new List<Country>
             {
-                new Country {CountryId = 1, Name = "Belgium"},
-                new Country {CountryId = 2, Name = "Netherlands"},
-                new Country {CountryId = 3, Name = "USA"},
-                new Country {CountryId = 4, Name = "Japan"},
-                new Country {CountryId = 5, Name = "China"},
-                new Country {CountryId = 6, Name = "UK"},
-                new Country {CountryId = 7, Name = "France"},
-                new Country {CountryId = 8, Name = "Brazil"}
+                new Country { CountryId = 1, Name = "Belgium" },
+                new Country { CountryId = 2, Name = "Netherlands" },
+                new Country { CountryId = 3, Name = "USA" },
+                new Country { CountryId = 4, Name = "Japan" },
+                new Country { CountryId = 5, Name = "China" },
+                new Country { CountryId = 6, Name = "UK" },
+                new Country { CountryId = 7, Name = "France" },
+                new Country { CountryId = 8, Name = "Brazil" }
             };
         }
 
@@ -89,53 +91,38 @@ namespace BethanysPieShopHRM.UI.Services
         {
             _jobCategories = new List<JobCategory>()
             {
-                new JobCategory{JobCategoryId = 1, JobCategoryName = "Pie research"},
-                new JobCategory{JobCategoryId = 2, JobCategoryName = "Sales"},
-                new JobCategory{JobCategoryId = 3, JobCategoryName = "Management"},
-                new JobCategory{JobCategoryId = 4, JobCategoryName = "Store staff"},
-                new JobCategory{JobCategoryId = 5, JobCategoryName = "Finance"},
-                new JobCategory{JobCategoryId = 6, JobCategoryName = "QA"},
-                new JobCategory{JobCategoryId = 7, JobCategoryName = "IT"},
-                new JobCategory{JobCategoryId = 8, JobCategoryName = "Cleaning"},
-                new JobCategory{JobCategoryId = 9, JobCategoryName = "Bakery"},
-                new JobCategory{JobCategoryId = 9, JobCategoryName = "Bakery"}
-
+                new JobCategory { JobCategoryId = 1, JobCategoryName = "Pie research" },
+                new JobCategory { JobCategoryId = 2, JobCategoryName = "Sales" },
+                new JobCategory { JobCategoryId = 3, JobCategoryName = "Management" },
+                new JobCategory { JobCategoryId = 4, JobCategoryName = "Store staff" },
+                new JobCategory { JobCategoryId = 5, JobCategoryName = "Finance" },
+                new JobCategory { JobCategoryId = 6, JobCategoryName = "QA" },
+                new JobCategory { JobCategoryId = 7, JobCategoryName = "IT" },
+                new JobCategory { JobCategoryId = 8, JobCategoryName = "Cleaning" },
+                new JobCategory { JobCategoryId = 9, JobCategoryName = "Bakery" },
+                new JobCategory { JobCategoryId = 9, JobCategoryName = "Bakery" }
             };
         }
 
-        public Task<Employee> AddEmployee(Employee employee)
-        {
-            throw new NotImplementedException();
-        }
+        public Task<Employee> AddEmployee(Employee employee) { throw new NotImplementedException(); }
 
-        public Task DeleteEmployee(int employeeId)
-        {
-            throw new NotImplementedException();
-        }
+        public Task DeleteEmployee(int employeeId) { throw new NotImplementedException(); }
 
-        public async Task<List<Country>> GetAllCountries()
-        {
-            return await Task.Run(() => Countries);
-        }
+        public async Task<List<Country>> GetAllCountries() { return await Task.Run(() => Countries); }
 
-        public async Task<IEnumerable<Employee>> GetAllEmployees()
-        {
-            return await Task.Run(() => Employees);
-        }
+        public async Task<IEnumerable<Employee>> GetAllEmployees() { return await Task.Run(() => Employees); }
 
-        public async Task<List<JobCategory>> GetAllJobCategories()
-        {
-            return await Task.Run(() => JobCategories);
-        }
+        public async Task<List<JobCategory>> GetAllJobCategories() { return await Task.Run(() => JobCategories); }
 
         public async Task<Employee> GetEmployeeDetailsAsync(int employeeId)
         {
-            return await Task.Run(() => { return Employees.FirstOrDefault(e => e.EmployeeId == employeeId); });
+            return await Task.Run(
+                () =>
+                {
+                    return Employees.FirstOrDefault(e => e.EmployeeId == employeeId);
+                });
         }
 
-        public Task UpdateEmployee(Employee employee)
-        {
-            throw new NotImplementedException();
-        }
+        public Task UpdateEmployee(Employee employee) { throw new NotImplementedException(); }
     }
 }

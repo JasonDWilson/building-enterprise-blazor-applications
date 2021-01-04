@@ -1,5 +1,5 @@
 ﻿using BethanysPieShopHRM.Shared;
-using Microsoft.AspNetCore.Components;
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
@@ -12,10 +12,9 @@ namespace BethanysPieShopHRM.UI.Services
     {
         private readonly HttpClient _httpClient;
 
-        public EmployeeDataService(HttpClient httpClient)
-        {
-            _httpClient = httpClient;
-        }
+        public Employee SavedEmployee { get; set; }
+
+        public EmployeeDataService(HttpClient httpClient) { _httpClient = httpClient; }
 
         public async Task<Employee> AddEmployee(Employee employee)
         {
@@ -33,20 +32,20 @@ namespace BethanysPieShopHRM.UI.Services
         }
 
         public async Task DeleteEmployee(int employeeId)
-        {
-            await _httpClient.DeleteAsync($"api/employee/{employeeId}");
-        }
+        { await _httpClient.DeleteAsync($"api/employee/{employeeId}"); }
 
         public async Task<IEnumerable<Employee>> GetAllEmployees()
         {
-            return await JsonSerializer.DeserializeAsync<IEnumerable<Employee>>
-                (await _httpClient.GetStreamAsync($"api/employee"), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+            return await JsonSerializer.DeserializeAsync<IEnumerable<Employee>>(
+                await _httpClient.GetStreamAsync($"api/employee"),
+                new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
         }
 
         public async Task<Employee> GetEmployeeDetailsAsync(int employeeId)
         {
-            return await JsonSerializer.DeserializeAsync<Employee>
-                (await _httpClient.GetStreamAsync($"api/employee/{employeeId}"), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+            return await JsonSerializer.DeserializeAsync<Employee>(
+                await _httpClient.GetStreamAsync($"api/employee/{employeeId}"),
+                new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
         }
 
         public async Task UpdateEmployee(Employee employee)
