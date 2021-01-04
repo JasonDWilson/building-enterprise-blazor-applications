@@ -6,6 +6,8 @@ namespace BethanysPieShopHRM.UI.Services
 {
     public interface IEmployeeDataService
     {
+        Employee SavedEmployee { get; set; }
+
         Task<Employee> AddEmployee(Employee employee);
         Task DeleteEmployee(int employeeId);
         Task<IEnumerable<Employee>> GetAllEmployees();

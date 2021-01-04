@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace BethanysPieShopHRM.UI.Pages
 {
-    public class EmployeeEditBase : ComponentBase
+    public partial class EmployeeEdit
     {
 
         //needed to bind to select to value
@@ -101,7 +101,11 @@ namespace BethanysPieShopHRM.UI.Pages
 
             int.TryParse(EmployeeId, out var employeeId);
 
-            if (employeeId == 0) //new employee is being created
+            if(EmployeeDataService.SavedEmployee != null)
+            {
+                Employee = EmployeeDataService.SavedEmployee;
+            }
+            else if (employeeId == 0) //new employee is being created
             {
                 //add some defaults
                 Employee = new Employee { CountryId = 1, JobCategoryId = 1, BirthDate = DateTime.Now, JoinedDate = DateTime.Now };
@@ -113,6 +117,12 @@ namespace BethanysPieShopHRM.UI.Pages
 
             CountryId = Employee.CountryId.ToString();
             JobCategoryId = Employee.JobCategoryId.ToString();
+        }
+
+        protected void TempSave()
+        {
+            EmployeeDataService.SavedEmployee = Employee;
+            NavigateToOverview();
         }
     }
 }
